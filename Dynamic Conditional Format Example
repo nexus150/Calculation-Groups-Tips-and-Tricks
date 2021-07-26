@@ -1,0 +1,27 @@
+// Inspired by Kane Snyder (@tenfingers) and his technique of calculated groups for dynamic labels of highest and lowest values.
+IF (
+    SELECTEDMEASURENAME () = "Conditional Formatting",
+    VAR MeasureInContext = selectedvalue('SalesMetric1'[Metric])
+    VAR VisibleDates =
+        CALCULATETABLE ( VALUES ( 'Date' ), ALLSELECTED ( 'Date'[Date] ) )
+    VAR Highest =
+        calculate(MAXX ( VisibleDates, [Metric 1 Measure] ), 'SalesMetric1'[Metric] = MeasureInContext)
+    VAR Lowest =
+        calculate(MINX ( VisibleDates, [Metric 1 Measure] ), 'SalesMetric1'[Metric] = MeasureInContext)
+    RETURN
+        SWITCH (
+            TRUE (),
+            SELECTEDVALUE ( Labels[Labels] ) = "All Values", "#FFC100",
+            SELECTEDVALUE ( Labels[Labels] ) = "Highest & Lowest Values"
+                &&  calculate([Metric 1 Measure], 'SalesMetric1'[Metric] = MeasureInContext) = Highest, "#0FB471",
+            SELECTEDVALUE ( Labels[Labels] ) = "Highest & Lowest Values"
+                && calculate([Metric 1 Measure], 'SalesMetric1'[Metric] = MeasureInContext) = Lowest, "#E73538",
+            SELECTEDVALUE ( Labels[Labels] ) = "Look at me"
+                && calculate([Metric 1 Measure], 'SalesMetric1'[Metric] = MeasureInContext) = Highest, "#0FB471",
+            SELECTEDVALUE ( Labels[Labels] ) = "Oh No!"
+                && calculate([Metric 1 Measure], 'SalesMetric1'[Metric] = MeasureInContext) = Lowest, "#E73538",
+            "#C1C1C1"
+        )
+        ,
+    SELECTEDMEASURE ()
+)
