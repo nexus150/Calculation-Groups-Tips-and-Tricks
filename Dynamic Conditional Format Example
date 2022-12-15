@@ -1,4 +1,4 @@
-// Inspired by Kane Snyder (@tenfingers) and his technique of calculated groups for dynamic labels of highest and lowest values.
+// Inspired by Kane Snyder (@tenfingers) and his technique of calculation groups for dynamic labels of highest and lowest values.
 IF (
     SELECTEDMEASURENAME () = "Conditional Formatting",
     VAR MeasureInContext = selectedvalue('SalesMetric1'[Metric])
